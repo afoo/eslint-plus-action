@@ -1,22 +1,19 @@
 #!/bin/bash
 
-set -e
+#set -e
 
-
-(
-    cd /action
-    echo "install action deps"
-
-    [ -f yarn.lock ] && NODE_ENV=production yarn install --frozen-lockfile --prefer-offline
-    [ -f package-lock.json ] && NODE_ENV=production npm install 
-)
+pushd /action
+echo "install action deps"
+[ -f yarn.lock ] && NODE_ENV=production yarn install --frozen-lockfile --prefer-offline
+#[ -f package-lock.json ] && NODE_ENV=production npm install 
+popd
 
 cd frontend
 echo "Execute From Directory: $(pwd)"
 
 if [ ! -d "./node_modules" ] || [ "$2" = 'true' ] ; then
     echo "install dependencies"
-    [ -f yarn.lock ] && yarn install --frozen-lockfile --prefer-offline
+    #[ -f yarn.lock ] && yarn install --frozen-lockfile --prefer-offline
     [ -f package-lock.json ] && npm ci
 fi
 
