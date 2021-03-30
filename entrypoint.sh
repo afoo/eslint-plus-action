@@ -32,7 +32,7 @@ echo "Yarn Action Install"
 [ -f package-lock.json ] && NODE_ENV=production npm install 
 popd
 
-
+cd frontend
 echo "Execute From Directory: $(pwd)"
 
 NODE_PATH=node_modules GITHUB_TOKEN="${GITHUB_TOKEN:-${1:-.}}" SOURCE_ROOT=${2:-.} node /action/lib/run.js
