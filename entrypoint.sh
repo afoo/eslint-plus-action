@@ -1,39 +1,24 @@
 #!/bin/bash
 
-echo "ENTRY"
-
-# Removes confusing pushd / popd logging to output
-pushd () {
-    local CPWD;
-    CPWD="$(pwd)"
-    command pushd "$@" > /dev/null
-    echo "[pushd] [${CPWD}] -> [$(pwd)]"
-}
-
-popd () {
-    local CPWD
-    CPWD="$(pwd)"
-    command popd "$@" > /dev/null
-    echo "[popd] [${CPWD}] -> [$(pwd)]"
-}
-
 set -e
 
-if [ ! -d "./node_modules" ] || [ "$2" = 'true' ] ; then
-    echo "Install Yarn"
-    [ -f yarn.lock ] && yarn install --frozen-lockfile --prefer-offline
-    [ -f package-lock.json ] && npm ci
-fi
 
-pushd /action
-echo "Yarn Action Install"
+(
+    cd /action
+    echo "install action deps"
 
-[ -f yarn.lock ] && NODE_ENV=production yarn install --frozen-lockfile --prefer-offline
-[ -f package-lock.json ] && NODE_ENV=production npm install 
-popd
+    [ -f yarn.lock ] && NODE_ENV=production yarn install --frozen-lockfile --prefer-offline
+    [ -f package-lock.json ] && NODE_ENV=production npm install 
+)
 
 cd frontend
 echo "Execute From Directory: $(pwd)"
+
+if [ ! -d "./node_modules" ] || [ "$2" = 'true' ] ; then
+    echo "install dependencies"
+    [ -f yarn.lock ] && yarn install --frozen-lockfile --prefer-offline
+    [ -f package-lock.json ] && npm ci
+fi
 
 NODE_PATH=node_modules GITHUB_TOKEN="${GITHUB_TOKEN:-${1:-.}}" SOURCE_ROOT=${2:-.} node /action/lib/run.js
 
