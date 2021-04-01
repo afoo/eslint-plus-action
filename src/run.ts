@@ -33,7 +33,8 @@ import cloneDeep from 'lodash.clonedeep';
 
 async function run(): Promise<void> {
   try {
-    // console.log(JSON.stringify(context, null, 2));
+    console.log('context:', JSON.stringify(context, null, 2));
+    console.log('cwd:', process.cwd());
     // console.log(context.issue);
     // console.log(context.repo);
 
